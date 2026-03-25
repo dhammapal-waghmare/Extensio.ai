@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import loginImg from "../assets/signin.jpeg";
-import signupImg from "../assets/signup.jpeg";
+import loginImg from "../assets/signin.png";
+import signupImg from "../assets/signup.png";
 
 export default function Login() {
   const [isSignup, setIsSignup] = useState(false);
