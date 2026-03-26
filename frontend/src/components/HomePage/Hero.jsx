@@ -1,99 +1,66 @@
+
 import React from "react";
-import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import img from "../../assets/img.png";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section
       id="home"
-      className="w-full min-h-screen bg-white text-black flex items-center pt-24"
+      className="w-full bg-white text-black pt-16 overflow-x-hidden"
     >
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
-        
+      <div className="max-w-7xl mx-auto px-6 pb-16 grid md:grid-cols-2 gap-10 items-center">
+ 
         {/* Left Content */}
-        <div>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-6xl font-bold leading-tight"
-          >
-            Automate Your Business <br />
-            With <span className="text-blue-600">Extensio.ai</span>
-          </motion.h1>
+        <div className="max-w-xl">
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            Build Chrome Extensions 
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-gray-600 mt-6 text-lg"
-          >
-            AI-powered automation tools to manage tasks, generate content,
-            analyze data, and boost productivity — all in one platform.
-          </motion.p>
+            Without <span className="text-blue-600">Coding</span>
+          </h1>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="flex gap-4 mt-8"
-          >
-            {/* Black Button */}
-            <button className="bg-black text-white px-6 py-3 rounded-xl font-semibold transition duration-300 hover:bg-gray-800 hover:scale-105">
-              Get Started Free
+          <p className="text-gray-600 mt-6 text-lg">
+            Extensio.ai lets you create powerful Chrome extensions just by
+            describing your idea. Instantly generate complete projects with
+            manifest files, scripts, and UI — ready to download and use.
+          </p>
+
+          <div className="mt-8">
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-black text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800"
+            >
+              Generate Extension
             </button>
-
-            {/* Outline Button */}
-            {/* <button className="border border-gray-300 px-6 py-3 rounded-xl font-semibold transition duration-300 hover:bg-gray-100">
-              Watch Demo
-            </button> */}
-          </motion.div>
+          </div>
 
           {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="flex gap-10 mt-10"
-          >
+          <div className="flex gap-10 mt-10">
             <div>
-              <h2 className="text-2xl font-bold">10K+</h2>
+              <h2 className="text-2xl font-bold">5K+</h2>
+              <p className="text-gray-500 text-sm">Extensions Generated</p>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">1K+</h2>
               <p className="text-gray-500 text-sm">Users</p>
             </div>
             <div>
-              <h2 className="text-2xl font-bold">500+</h2>
-              <p className="text-gray-500 text-sm">Businesses</p>
+              <h2 className="text-2xl font-bold">100%</h2>
+              <p className="text-gray-500 text-sm">No-Code</p>
             </div>
-            <div>
-              <h2 className="text-2xl font-bold">99%</h2>
-              <p className="text-gray-500 text-sm">Accuracy</p>
-            </div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Right Side Image */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="flex justify-center"
-        >
-         <img
-  src={img}
-  alt="AI Dashboard"
-  className="
-    w-full 
-    max-w-[280px] 
-    sm:max-w-[350px] 
-    md:max-w-[420px] 
-    lg:max-w-[500px] 
-    xl:max-w-[550px]
-    mx-auto
-    transition duration-300 
-    hover:scale-105
-  "
-/>
-        </motion.div>
+        {/* Right Image */}
+        <div className="flex justify-center">
+          <img
+            src={img}
+            alt="Extension Generator"
+            className="w-full max-w-md lg:max-w-lg object-contain"
+          />
+        </div>
       </div>
     </section>
   );

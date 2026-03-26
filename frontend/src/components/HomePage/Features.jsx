@@ -1,37 +1,37 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Bot, FileText, BarChart3, Zap, Shield, Globe } from "lucide-react";
+import { Bot, FileCode, Package, Zap, Shield, Folder } from "lucide-react";
 
 const features = [
   {
     icon: <Bot size={28} />,
-    title: "AI Assistant",
-    desc: "Smart AI assistant to help you write, analyze and automate tasks.",
+    title: "Text-to-Extension AI",
+    desc: "Simply describe your idea in plain English and the AI will generate a complete Chrome extension.",
   },
   {
-    icon: <FileText size={28} />,
-    title: "Resume Analyzer",
-    desc: "Analyze resumes and get AI suggestions to improve them.",
+    icon: <FileCode size={28} />,
+    title: "Auto Code Generation",
+    desc: "Automatically creates all required files like manifest.json, content.js, and popup.html.",
   },
   {
-    icon: <BarChart3 size={28} />,
-    title: "Analytics Dashboard",
-    desc: "Track performance, usage and productivity with analytics.",
+    icon: <Package size={28} />,
+    title: "Instant ZIP Packaging",
+    desc: "All generated files are packaged into a ready-to-download ZIP file instantly.",
   },
   {
     icon: <Zap size={28} />,
-    title: "Task Automation",
-    desc: "Automate repetitive work and save hours every day.",
+    title: "Smart Prompt Engine",
+    desc: "Advanced prompt system ensures accurate, structured and valid Chrome Extension output.",
+  },
+  {
+    icon: <Folder size={28} />,
+    title: "Project Management",
+    desc: "Save, manage and update your extension projects with basic version control.",
   },
   {
     icon: <Shield size={28} />,
-    title: "Secure Platform",
-    desc: "Your data is encrypted and protected with top security.",
-  },
-  {
-    icon: <Globe size={28} />,
-    title: "Cloud Access",
-    desc: "Access your tools from anywhere anytime.",
+    title: "Secure Processing",
+    desc: "Your generated files and data are handled securely with temporary storage systems.",
   },
 ];
 
@@ -55,7 +55,7 @@ const Features = () => {
           transition={{ delay: 0.2 }}
           className="text-gray-600 mt-4 max-w-2xl mx-auto"
         >
-          Everything you need to automate, analyze and grow your business with AI.
+          Build Chrome extensions without coding. Just describe, generate, and download instantly.
         </motion.p>
 
         {/* Feature Cards */}
