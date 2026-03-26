@@ -9,6 +9,8 @@ import {
   Sun,
   Moon,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import JSZip from "jszip";
@@ -16,7 +18,7 @@ import { saveAs } from "file-saver";
 import logoDark from "../assets/logo-dark.png";
 import logoLight from "../assets/logo-light.png";
 
-/* ================= Sidebar Item ================= */
+// Sidebar Item
 const SidebarItem = ({ icon, label, active, onClick, dark }) => {
   const isActive = active === label;
 
@@ -30,22 +32,23 @@ const SidebarItem = ({ icon, label, active, onClick, dark }) => {
               ? "bg-gray-800 text-white"
               : "bg-gray-300 text-black"
             : dark
-              ? "hover:bg-gray-800"
-              : "hover:bg-gray-200"
+            ? "hover:bg-gray-800"
+            : "hover:bg-gray-200"
         }`}
     >
       {icon}
-      <span>{label}</span>
+      <span className="text-sm sm:text-base">{label}</span>
     </div>
   );
 };
 
-/* ================= Dashboard ================= */
+//Dashboard 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const [showProfile, setShowProfile] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Home");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const profileRef = useRef();
   const inputRef = useRef();
@@ -58,7 +61,6 @@ const Dashboard = () => {
   const [allFiles, setAllFiles] = useState({});
   const [dark, setDark] = useState(false);
 
-  /* ================= Effects ================= */
   useEffect(() => {
     document.body.className = dark
       ? "bg-black text-white"
@@ -76,10 +78,11 @@ const Dashboard = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ================= Handlers ================= */
+  //Handlers 
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
     setShowProfile(false);
+    setSidebarOpen(false);
 
     if (menu === "Home") navigate("/");
     if (menu === "Generate Extension") {
@@ -117,24 +120,36 @@ const Dashboard = () => {
   const mainTabs = ["manifest.json", "content.js", "popup.html"];
   const extraTabs = ["popup.js", "background.js", "styles.css"];
 
-  /* ================= UI ================= */
+  // UI
   return (
     <div className="flex flex-col h-screen">
       {/* NAVBAR */}
-      <nav
-        className={`w-full px-6 py-3 shadow flex justify-between ${
-          dark ? "bg-black text-white" : "bg-white"
-        }`}
-      >
-        <img src={dark ? logoLight : logoDark} alt="logo" className="h-10" />
-
+      <nav className="w-full px-4 sm:px-6 py-3 shadow flex justify-between items-center">
         <div className="flex items-center gap-3">
+          {/* Mobile menu */}
+          <button
+            className="sm:hidden"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {sidebarOpen ? <X /> : <Menu />}
+          </button>
+
+          <img
+            src={dark ? logoLight : logoDark}
+            alt="logo"
+            className="h-8 sm:h-10"
+          />
+        </div>
+
+        <div className="flex items-center gap-2 sm:gap-3">
           {dark ? <Moon size={18} /> : <Sun size={18} />}
-          <span>{dark ? "Dark" : "Light"}</span>
+          <span className="hidden sm:block">
+            {dark ? "Dark" : "Light"}
+          </span>
 
           <button
             onClick={() => setDark(!dark)}
-            className={`w-12 h-6 flex items-center rounded-full p-1 transition ${
+            className={`w-12 h-6 flex items-center rounded-full p-1 ${
               dark ? "bg-gray-700" : "bg-gray-300"
             }`}
           >
@@ -148,43 +163,26 @@ const Dashboard = () => {
       </nav>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* SIDEBAR (FIXED WIDTH ✅) */}
+        {/* SIDEBAR */}
         <div
-          className={`w-64 min-w-[256px] shrink-0 p-4 flex flex-col justify-between ${
-            dark ? "bg-black text-white" : "bg-gray-100"
-          }`}
+          className={`fixed sm:relative z-40 top-0 left-0 h-full w-64 p-4 flex flex-col justify-between transform transition-transform duration-300
+          ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } sm:translate-x-0
+          ${dark ? "bg-black text-white" : "bg-gray-100"}
+        `}
         >
           <div>
-            <SidebarItem
-              icon={<Home size={18} />}
-              label="Home"
-              active={activeMenu}
-              onClick={handleMenuClick}
-              dark={dark}
-            />
-            <SidebarItem
-              icon={<Wand2 size={18} />}
-              label="Generate Extension"
-              active={activeMenu}
-              onClick={handleMenuClick}
-              dark={dark}
-            />
-            <SidebarItem
-              icon={<LayoutTemplate size={18} />}
-              label="Extension Library"
-              active={activeMenu}
-              onClick={handleMenuClick}
-              dark={dark}
-            />
+            <SidebarItem icon={<Home size={18} />} label="Home" active={activeMenu} onClick={handleMenuClick} dark={dark} />
+            <SidebarItem icon={<Wand2 size={18} />} label="Generate Extension" active={activeMenu} onClick={handleMenuClick} dark={dark} />
+            <SidebarItem icon={<LayoutTemplate size={18} />} label="Extension Library" active={activeMenu} onClick={handleMenuClick} dark={dark} />
           </div>
 
-          {/* PROFILE FIXED ✅ */}
+          {/* PROFILE */}
           <div className="relative" ref={profileRef}>
             <div
               onClick={() => setShowProfile(!showProfile)}
-              className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer ${
-                dark ? "hover:bg-gray-800" : "hover:bg-gray-200"
-              }`}
+              className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
             >
               <User size={18} />
               Profile
@@ -192,13 +190,8 @@ const Dashboard = () => {
 
             {showProfile && (
               <div className="absolute bottom-14 left-0 w-44 z-50">
-                <div
-                  className={`rounded-xl shadow-lg p-3 ${
-                    dark ? "bg-gray-900" : "bg-white"
-                  }`}
-                >
+                <div className="rounded-xl shadow-lg p-3 bg-white dark:bg-gray-900">
                   <p className="font-medium">Username</p>
-
                   <button
                     onClick={() => navigate("/")}
                     className="text-red-500 mt-2 flex items-center gap-2"
@@ -213,11 +206,13 @@ const Dashboard = () => {
         </div>
 
         {/* MAIN CONTENT */}
-        <div className="flex-1 p-6 overflow-auto">
-          <h1 className="text-2xl font-semibold">Welcome to Dashboard 👋</h1>
+        <div className="flex-1 p-4 sm:p-6 overflow-auto w-full">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            Welcome to Dashboard 👋
+          </h1>
 
           {/* INPUT */}
-          <div className="mt-6 flex border-2 border-blue-900 rounded-xl px-4 py-3 bg-white">
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 border-2 border-blue-900 rounded-xl px-4 py-3 bg-white">
             <input
               ref={inputRef}
               type="text"
@@ -229,17 +224,19 @@ const Dashboard = () => {
 
             <button
               onClick={handleGenerate}
-              className="bg-black text-white px-5 py-2 rounded-lg flex items-center gap-2"
+              className="bg-black text-white px-5 py-2 rounded-lg flex items-center justify-center gap-2"
             >
               Generate <Sparkles size={16} />
             </button>
           </div>
 
-          {/* OUTPUT FIXED ✅ */}
+          {/* OUTPUT */}
           {output["manifest.json"] && (
             <div className="mt-6 border-2 border-blue-900 rounded-xl bg-white text-black">
-              <div className="flex justify-between items-center p-2 border-b flex-wrap gap-2">
-                <div className="flex gap-2 flex-wrap">
+              <div className="flex flex-col sm:flex-row sm:justify-between gap-3 p-2 border-b">
+                
+                {/* Tabs */}
+                <div className="flex flex-wrap gap-2">
                   {mainTabs.map((tab) => (
                     <button
                       key={tab}
@@ -266,7 +263,8 @@ const Dashboard = () => {
                     ))}
                 </div>
 
-                <div className="flex gap-2">
+                {/* Actions */}
+                <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => setShowMore(!showMore)}
                     className="px-3 py-1 bg-gray-300 rounded text-sm"
@@ -283,8 +281,8 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="p-4">
-                <pre className="whitespace-pre-wrap wrap-break-words">
+              <div className="p-4 overflow-auto">
+                <pre className="whitespace-pre-wrap wrap-break-word text-sm">
                   {output[activeTab]}
                 </pre>
               </div>
