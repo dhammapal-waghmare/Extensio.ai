@@ -1,5 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
+import image from "../../assets/about.png"
+<div className="" />
 
 const About = () => {
   return (
@@ -61,7 +63,7 @@ const About = () => {
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          src="https://assets.prebuiltui.com/images/ai/ai-team.png"
+          src={image}
           alt="Extensio AI Platform"
           className="w-full rounded-2xl shadow-lg object-cover"
         />
