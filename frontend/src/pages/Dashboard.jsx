@@ -17,6 +17,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import logoDark from "../assets/logo-dark.png";
 import logoLight from "../assets/logo-light.png";
+import { apiRequest, authHeaders, getToken } from "../lib/api";
 
 // Sidebar Item
 const SidebarItem = ({ icon, label, active, onClick, dark }) => {
@@ -60,12 +61,21 @@ const Dashboard = () => {
   const [output, setOutput] = useState({});
   const [allFiles, setAllFiles] = useState({});
   const [dark, setDark] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   useEffect(() => {
     document.body.className = dark
       ? "bg-black text-white"
       : "bg-white text-black";
   }, [dark]);
+
+  useEffect(() => {
+    if (!getToken()) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -90,31 +100,54 @@ const Dashboard = () => {
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) return;
 
-    const files = {
-      "manifest.json": `{ "manifest_version": 3 }`,
-      "content.js": `console.log("Content loaded");`,
-      "popup.html": `<h2>Hello Extension 🚀</h2>`,
-      "popup.js": `console.log("Popup JS");`,
-      "background.js": `console.log("Background running");`,
-      "styles.css": `body { font-family: Arial; }`,
-    };
+    setLoading(true);
+    setError("");
 
-    setOutput(files);
-    setAllFiles(files);
-    setActiveTab("manifest.json");
-    setPrompt("");
+    try {
+      const data = await apiRequest("/generate", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ prompt }),
+      });
+
+      setOutput(data.files || {});
+      setAllFiles(data.files || {});
+      setDownloadUrl(data.downloadUrl || "");
+      setActiveTab("manifest.json");
+      setPrompt("");
+    } catch (apiError) {
+      setError(apiError.message);
+      if (apiError.message.toLowerCase().includes("unauthorized")) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        navigate("/login");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDownload = async () => {
+    if (downloadUrl) {
+      window.open(downloadUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
+
     const zip = new JSZip();
     Object.keys(allFiles).forEach((file) => {
       zip.file(file, allFiles[file]);
     });
     const blob = await zip.generateAsync({ type: "blob" });
     saveAs(blob, "extension.zip");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   const mainTabs = ["manifest.json", "content.js", "popup.html"];
@@ -193,7 +226,7 @@ const Dashboard = () => {
                 <div className="rounded-xl shadow-lg p-3 bg-white dark:bg-gray-900">
                   <p className="font-medium">Username</p>
                   <button
-                    onClick={() => navigate("/")}
+                    onClick={handleLogout}
                     className="text-red-500 mt-2 flex items-center gap-2"
                   >
                     <LogOut size={16} />
@@ -224,11 +257,14 @@ const Dashboard = () => {
 
             <button
               onClick={handleGenerate}
+              disabled={loading}
               className="bg-black text-white px-5 py-2 rounded-lg flex items-center justify-center gap-2"
             >
-              Generate <Sparkles size={16} />
+              {loading ? "Generating..." : "Generate"} <Sparkles size={16} />
             </button>
           </div>
+
+          {error && <p className="mt-3 text-red-600 text-sm">{error}</p>}
 
           {/* OUTPUT */}
           {output["manifest.json"] && (

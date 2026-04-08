@@ -1,0 +1,91 @@
+:root {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --text: #0f172a;
+  --muted: #475569;
+  --primary: #0f172a;
+  --primaryText: #ffffff;
+  --secondary: #e2e8f0;
+  --secondaryText: #0f172a;
+  --success: #166534;
+  --error: #b91c1c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: radial-gradient(circle at top right, #e2e8f0, #f8fafc 50%);
+  color: var(--text);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  padding: 14px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+  padding: 14px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.prompt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.summary {
+  margin: 8px 0 14px;
+  color: #1e293b;
+  font-size: 13px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#runBtn {
+  background: var(--primary);
+  color: var(--primaryText);
+}
+
+.secondary {
+  background: var(--secondary);
+  color: var(--secondaryText);
+}
+
+#status {
+  min-height: 20px;
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#status.ok {
+  color: var(--success);
+}
+
+#status.error {
+  color: var(--error);
+}
